@@ -11,44 +11,90 @@ on:
 jobs:
   draw:
     runs-on: ubuntu-latest
+
     permissions:
       contents: write
-    steps:
-      - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
         with:
-          python-version: "3.11"
+          python-version: "3.12"
 
       - name: Install keymap-drawer
-        run: pip install keymap-drawer
+        run: |
+          python -m pip install --upgrade pip
+          pip install keymap-drawer
 
       - name: Install rsvg-convert
-        run: sudo apt-get update && sudo apt-get install -y librsvg2-bin
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y librsvg2-bin
 
-      - name: Parse keymap to YAML
+      - name: Parse keymap
         run: |
           mkdir -p keymap-drawer
-          keymap parse -z config/sofle.keymap > keymap-drawer/keymap.yaml
 
-      - name: Draw each layer separately
+          keymap parse -z config/sofle.keymap \
+            > keymap-drawer/keymap.yaml
+
+      - name: Show parsed keymap
         run: |
-          keymap draw -s Base    keymap-drawer/keymap.yaml > keymap-drawer/base.svg
-          keymap draw -s Symbols keymap-drawer/keymap.yaml > keymap-drawer/symbols.svg
-          keymap draw -s Nav     keymap-drawer/keymap.yaml > keymap-drawer/nav.svg
-          keymap draw -s System  keymap-drawer/keymap.yaml > keymap-drawer/system.svg
+          cat keymap-drawer/keymap.yaml
+
+      - name: Draw Base
+        run: |
+          keymap draw \
+            --select-layers Base \
+            keymap-drawer/keymap.yaml \
+            > keymap-drawer/base.svg
+
+      - name: Draw Symbols
+        run: |
+          keymap draw \
+            --select-layers Symbols \
+            keymap-drawer/keymap.yaml \
+            > keymap-drawer/symbols.svg
+
+      - name: Draw Nav
+        run: |
+          keymap draw \
+            --select-layers Nav \
+            keymap-drawer/keymap.yaml \
+            > keymap-drawer/nav.svg
+
+      - name: Draw System
+        run: |
+          keymap draw \
+            --select-layers System \
+            keymap-drawer/keymap.yaml \
+            > keymap-drawer/system.svg
 
       - name: Convert SVG to PNG
         run: |
-          rsvg-convert -w 1400 keymap-drawer/base.svg    -o keymap-drawer/base.png
-          rsvg-convert -w 1400 keymap-drawer/symbols.svg -o keymap-drawer/symbols.png
-          rsvg-convert -w 1400 keymap-drawer/nav.svg     -o keymap-drawer/nav.png
-          rsvg-convert -w 1400 keymap-drawer/system.svg  -o keymap-drawer/system.png
+          rsvg-convert -w 1400 keymap-drawer/base.svg \
+            -o keymap-drawer/base.png
+
+          rsvg-convert -w 1400 keymap-drawer/symbols.svg \
+            -o keymap-drawer/symbols.png
+
+          rsvg-convert -w 1400 keymap-drawer/nav.svg \
+            -o keymap-drawer/nav.png
+
+          rsvg-convert -w 1400 keymap-drawer/system.svg \
+            -o keymap-drawer/system.png
 
       - name: Commit results
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+
           git add keymap-drawer/
-          git diff --staged --quiet || git commit -m "Update keymap images"
-          git push
+
+          if ! git diff --staged --quiet; then
+            git commit -m "Update keymap images"
+            git push
+          fi
