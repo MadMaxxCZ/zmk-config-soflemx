@@ -393,6 +393,12 @@ path.combo {
 <rect rx="6" ry="6" x="266" y="194" width="28" height="26" class="combo"/>
 <text x="280" y="206" class="combo tap">ENTER</text>
 </g>
+<g class="combo combopos-4">
+<path d="M700,147 l-37,0" class="combo"/>
+<path d="M700,147 l37,0" class="combo"/>
+<rect rx="6" ry="6" x="686" y="134" width="28" height="26" class="combo"/>
+<text x="700" y="147" class="combo tap">DEL</text>
+</g>
 </g>
 </g>
 </svg>
