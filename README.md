@@ -1,5 +1,7 @@
 # Sofle Choc or MX with 2 encoders. 
 
+The Keymap editor https://nickcoutsos.github.io/keymap-editor/
+
 Flash firmware:
 1. Keep both halves powered on.
 2. Plug in right half. > press the physical reset button(located on the inner sides) twice quickly. > That will open a new directory on your computer called nice nano. > drag and drop the settings_reset file into that directory. (after transfer it will auto unmount and may give an error.  Ignore this error and continue.) > after transfer unplug right half.
@@ -16,3 +18,6 @@ Flash firmware:
 
 ## Bluetooth
 ![soflebluetooth](https://github.com/user-attachments/assets/6c6c1d46-74e9-4e91-8191-667fd3f0ec6d)
+
+
+
