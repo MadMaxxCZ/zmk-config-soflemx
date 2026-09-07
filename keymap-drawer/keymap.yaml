@@ -186,13 +186,11 @@ layers:
   - ''
   - ''
 combos:
-- p: [32, 31]
+- p: [28, 31]
   k: BACKSPACE
-- p: [27, 33]
+- p: [27, 32]
   k: DELETE
 - p: [25, 41]
   k: ESCAPE
 - p: [41, 40]
   k: ENTER
-- p: [31, 33]
-  k: DEL
