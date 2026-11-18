@@ -67,9 +67,34 @@
             tap-ms = <40>;
             bindings = <&kp LC(LA(N0))>, <&bt BT_NXT>;
         };
+
+        // Work PC: monitor HDMI 1 (Ctrl+Alt+1) + BT profile 1
+        to_work: to_work {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            wait-ms = <100>;
+            tap-ms = <40>;
+            bindings = <&kp LC(LA(N1))>, <&bt BT_SEL 0>;
+        };
+
+        // Home PC: monitor DP (Ctrl+Alt+3) + BT profile 2
+        to_home: to_home {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            wait-ms = <100>;
+            tap-ms = <40>;
+            bindings = <&kp LC(LA(N3))>, <&bt BT_SEL 1>;
+        };
     };
 
     behaviors {
+        // Right encoder: turn right (cw) -> home PC, turn left (ccw) -> work PC
+        sr_pc: sr_pc {
+            compatible = "zmk,behavior-sensor-rotate";
+            #sensor-binding-cells = <0>;
+            bindings = <&to_home>, <&to_work>;
+        };
+
         caps: caps {
             compatible = "zmk,behavior-caps-word";
             label = "CAPS";
@@ -99,7 +124,7 @@
                         &kp LGUI  &kp LALT  &kp LCTRL  &kp SPACE  &mo 1            &mo 2       &kp SPACE  &kp RETURN  &kp LALT   &kp RGUI
             >;
 
-            sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp UP DOWN>;
+            sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &sr_pc>;
         };
 
         lower_layer {
